@@ -18,7 +18,6 @@ export function Library() {
     let [openReader, setOpenReader] = useState(false);
     let [selectedManga, setSelectedManga] = useState<MangaModel | null>(null);
 
-
     async function openReaderFor(id: string) {
         try {
             const manga = await loadManga(id);

@@ -9,13 +9,13 @@ export function isApiLogging() {
 }
 
 //For you sanity, this should stay false xD
-const readerLogging = true;
+const readerLogging = false;
 export function isReaderLogging() {
     return readerLogging;
 }
 
 //For you sanity, this as well
-const libraryLogging = true;
+const libraryLogging = false;
 export function isLibraryLogging() {
     return libraryLogging;
 }
