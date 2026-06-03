@@ -25,9 +25,14 @@ export function isDataSaver() {
     return dataSaver;
 }
 
-const tryWithOrgAsWell = true;
-export function isTryWithOrgAsWell() {
-    return tryWithOrgAsWell;
+const tryWithDev = true;
+export function isTryWithDev() {
+    return tryWithDev;
+}
+
+const tryWithOrg = true;
+export function isTryWithOrg() {
+    return tryWithOrg;
 }
 
 const goThroughProxy = true;

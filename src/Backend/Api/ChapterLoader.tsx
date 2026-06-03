@@ -1,4 +1,4 @@
-import { isApiLogging, isGoThroughProxy, isTryWithOrgAsWell } from "../..";
+import { isApiLogging, isGoThroughProxy, isTryWithDev, isTryWithOrg  } from "../..";
 import { ChapterPagesResponse, ChapterResponse } from "../Model/Api/Chapter";
 import { ChapterModel } from "../Model/Model";
 import { toChapter } from "../Model/Transformers";
@@ -16,18 +16,21 @@ export async function loadChapter(Id: string): Promise<ChapterModel | null> {
     const url = `https://api.mangadex.dev/chapter/`;
     const orgUrl = isGoThroughProxy() ? `https://mangareader-proxy.theredbaron.workers.dev/chapter/` : `https://api.mangadex.org/chapter/`;
 
-    let chapter = await fetchChapter(url, Id);
-    if (chapter) {
-        return chapter;
-    }
-    else {
-        if (!isTryWithOrgAsWell()) {
-            return null;
+    if(isTryWithDev()) {
+        let chapter = await fetchChapter(url, Id);
+        if (chapter) {
+            return chapter;
         }
-        console.log("[API] Trying with .org endpoint");
-        let chapter = await fetchChapter(orgUrl, Id);
-        return chapter;
     }
+    
+    if (isTryWithOrg()) {
+        let chapter = await fetchChapter(orgUrl, Id);
+        if (chapter) {
+            return chapter;
+        }
+    }
+
+    return null;
 }
 
 async function fetchChapter(url: string, Id: string): Promise<ChapterModel | null> {
@@ -63,18 +66,21 @@ export async function loadPages(Id: string): Promise<ChapterPagesResponse | null
     const url = 'https://api.mangadex.dev/at-home/server/';
     const orgUrl = isGoThroughProxy() ? 'https://mangareader-proxy.theredbaron.workers.dev/at-home/server/' : 'https://api.mangadex.org/at-home/server/';
 
-    let pages = await fetchPages(url, Id);
-    if (pages) {
-        return pages;
-    }
-    else {
-        if (!isTryWithOrgAsWell()) {
-            return null;
+    if(isTryWithDev()) {
+        let pages = await fetchPages(url, Id);
+        if (pages) {
+            return pages;
         }
-        console.log("[API] Trying with .org endpoint");
-        let pages = await fetchPages(orgUrl, Id);
-        return pages;
     }
+
+    if (isTryWithOrg()) {
+        let pages = await fetchPages(orgUrl, Id);
+        if (pages) {
+            return pages;
+        }
+    }
+
+    return null;
 }
 
 async function fetchPages(url: string, Id: string): Promise<ChapterPagesResponse | null> {
