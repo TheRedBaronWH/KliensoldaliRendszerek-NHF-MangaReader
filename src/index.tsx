@@ -20,7 +20,6 @@ export function isLibraryLogging() {
     return libraryLogging;
 }
 
-
 const dataSaver = true;
 export function isDataSaver() {
     return dataSaver;
