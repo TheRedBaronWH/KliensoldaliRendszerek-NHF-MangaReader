@@ -20,7 +20,6 @@ export function isLibraryLogging() {
     return libraryLogging;
 }
 
-
 const dataSaver = true;
 export function isDataSaver() {
     return dataSaver;
@@ -34,6 +33,11 @@ export function isTryWithDev() {
 const tryWithOrg = true;
 export function isTryWithOrg() {
     return tryWithOrg;
+}
+
+const goThroughProxy = true;
+export function isGoThroughProxy() {
+    return goThroughProxy;
 }
 
 export function App() {
