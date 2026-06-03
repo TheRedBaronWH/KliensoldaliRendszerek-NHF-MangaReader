@@ -1,4 +1,4 @@
-import { isApiLogging, isTryWithOrgAsWell } from "../..";
+import { isApiLogging, isGoThroughProxy, isTryWithOrgAsWell } from "../..";
 import { ChapterPagesResponse, ChapterResponse } from "../Model/Api/Chapter";
 import { ChapterModel } from "../Model/Model";
 import { toChapter } from "../Model/Transformers";
@@ -14,7 +14,7 @@ import { toChapter } from "../Model/Transformers";
  **/
 export async function loadChapter(Id: string): Promise<ChapterModel | null> {
     const url = `https://api.mangadex.dev/chapter/`;
-    const orgUrl = `https://api.mangadex.org/chapter/`;
+    const orgUrl = isGoThroughProxy() ? `https://mangareader-proxy.theredbaron.workers.dev/chapter/` : `https://api.mangadex.org/chapter/`;
 
     let chapter = await fetchChapter(url, Id);
     if (chapter) {
@@ -61,7 +61,7 @@ async function fetchChapter(url: string, Id: string): Promise<ChapterModel | nul
  **/
 export async function loadPages(Id: string): Promise<ChapterPagesResponse | null> {
     const url = 'https://api.mangadex.dev/at-home/server/';
-    const orgUrl = 'https://api.mangadex.org/at-home/server/';
+    const orgUrl = isGoThroughProxy() ? 'https://mangareader-proxy.theredbaron.workers.dev/at-home/server/' : 'https://api.mangadex.org/at-home/server/';
 
     let pages = await fetchPages(url, Id);
     if (pages) {

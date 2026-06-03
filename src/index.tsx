@@ -30,6 +30,11 @@ export function isTryWithOrgAsWell() {
     return tryWithOrgAsWell;
 }
 
+const goThroughProxy = true;
+export function isGoThroughProxy() {
+    return goThroughProxy;
+}
+
 export function App() {
 	return Library();
 }

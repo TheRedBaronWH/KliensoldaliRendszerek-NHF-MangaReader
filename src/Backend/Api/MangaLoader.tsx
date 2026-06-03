@@ -1,4 +1,4 @@
-import { isApiLogging, isTryWithOrgAsWell } from "../..";
+import { isApiLogging, isGoThroughProxy, isTryWithOrgAsWell } from "../..";
 import { CoverResponse, MangaResponse, MangaSearchResponse } from "../Model/Api/Manga";
 import { RawVolumesResponse, RawVolumesResponseToVolumesResponse, Volume} from "../Model/Api/Volume";
 import { MangaModel, SavedManga } from "../Model/Model";
@@ -15,7 +15,7 @@ import { toManga, toSavedMangasList } from "../Model/Transformers";
  **/
 export async function searchForMangasWithName(name: string): Promise<SavedManga[] | null> {
     const url = "https://api.mangadex.dev/manga?title=";
-    const orgUrl = "https://api.mangadex.org/manga?title=";
+    const orgUrl = isGoThroughProxy() ? "https://mangareader-proxy.theredbaron.workers.dev/manga?title=" : "https://api.mangadex.org/manga?title=";
 
     let manga = await fetchByName(url, name);
     if (manga) {
@@ -64,7 +64,7 @@ export async function loadManga(Id: string): Promise<MangaModel | null> {
     //await connect();
 
     const url = "https://api.mangadex.dev/manga/";
-    const orgUrl = "https://api.mangadex.org/manga/";
+    const orgUrl = isGoThroughProxy() ? "https://mangareader-proxy.theredbaron.workers.dev/manga/" : "https://api.mangadex.org/manga/";
 
     let manga = await fetchById(url, Id);
     if (manga) {
@@ -112,7 +112,7 @@ async function fetchById(url: string, Id: string): Promise<MangaModel | null> {
  **/
 export async function loadMangaContent(Id: string): Promise<Volume[] | null> {
     const url = "https://api.mangadex.dev/manga/";
-    const orgUrl = "https://api.mangadex.org/manga/";
+    const orgUrl = isGoThroughProxy() ? "https://mangareader-proxy.theredbaron.workers.dev/manga/" : "https://api.mangadex.org/manga/";
 
     let content = await fetchContent(url, Id);
     if (content) {
@@ -162,7 +162,7 @@ async function fetchContent(url: string, Id: string): Promise<Volume[] | null> {
  **/
 export async function loadMangaCover(mangaId: string, coverId: string): Promise<string | null> {
     const url = "https://api.mangadex.dev/cover/";
-    const orgUrl = "https://api.mangadex.org/cover/";
+    const orgUrl = isGoThroughProxy() ? "https://mangareader-proxy.theredbaron.workers.dev/cover/" : "https://api.mangadex.org/cover/";
 
     let cover = await fetchCover(url, mangaId, coverId);
     if (cover) {
