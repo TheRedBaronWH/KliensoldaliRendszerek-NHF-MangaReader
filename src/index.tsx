@@ -25,7 +25,7 @@ export function isDataSaver() {
     return dataSaver;
 }
 
-const tryWithDev = true;
+const tryWithDev = false;
 export function isTryWithDev() {
     return tryWithDev;
 }
