@@ -71,7 +71,7 @@ export function ChapterReader(
 
         setActualPageNumber(p);
     }
-    const getPageSource = () => {
+    const getPageSourceNotSaver = () => {
         let src = actualChapter.baseUrl + "/data/" + actualChapter.hash + "/" + actualChapter.pageIds[actualPageNumber.valueOf()];
         if (isReaderLogging()) console.log(`[Reader] Page src: ${src}`);
         return src;
@@ -80,6 +80,14 @@ export function ChapterReader(
         let src = actualChapter.baseUrl + "/data-saver/" + actualChapter.hash + "/" + actualChapter.dataSaverPageIds[actualPageNumber.valueOf()];
         if (isReaderLogging()) console.log(`[Reader] Page src: ${src}`);
         return src;
+    }
+
+    const getPageSource = () => {
+        if (isDataSaver()) {
+            let pageSrc = getPageSourceDataSaver();
+            if (pageSrc) return pageSrc;
+        }
+        return getPageSourceNotSaver();
     }
 
 
@@ -93,7 +101,7 @@ export function ChapterReader(
             />
             <PageReader
                 chapter={actualChapter}
-                pageNumber={actualPageNumber + 1} pageSrc={isDataSaver() ? getPageSourceDataSaver() : getPageSource()}
+                pageNumber={actualPageNumber + 1} pageSrc={getPageSource()}
                 onNextChapter={() => setChapter(actualChapterNumber + 1)}
                 onPreviousChapter={() => setChapter(actualChapterNumber - 1)}
                 onNextPage={() => setPage(actualPageNumber + 1)}
