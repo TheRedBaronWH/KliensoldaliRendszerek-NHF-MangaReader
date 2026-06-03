@@ -17,18 +17,20 @@ export async function searchForMangasWithName(name: string): Promise<SavedManga[
     const url = "https://api.mangadex.dev/manga?title=";
     const orgUrl = isGoThroughProxy() ? "https://mangareader-proxy.theredbaron.workers.dev/manga?title=" : "https://api.mangadex.org/manga?title=";
 
-    let manga = await fetchByName(url, name);
-    if (manga) {
-        return manga;
-    }
-    else {
-        if (!isTryWithOrg()) {
-            return null;
+    if (isTryWithDev()) {
+        let manga = await fetchByName(url, name);
+        if (manga) {
+            return manga;
         }
+    }
+    
+    if (isTryWithOrg()) {
         console.log("[API] Trying with .org endpoint");
         let manga = await fetchByName(orgUrl, name);
         return manga;
     }
+
+    return null;
 }
 
 async function fetchByName(url: string, name: string): Promise<SavedManga[] | null> {
