@@ -168,7 +168,7 @@ async function fetchContent(url: string, Id: string): Promise<Volume[] | null> {
  **/
 export async function loadMangaCover(mangaId: string, coverId: string): Promise<string | null> {
     const url = "https://api.mangadex.dev/cover/";
-    const orgUrl = isGoThroughProxy() ? "https://mangareader-proxy.theredbaron.workers.dev/cover/" : "https://api.mangadex.org/cover/";
+    const orgUrl = "https://api.mangadex.org/cover/";
 
 
     if(isTryWithDev()) {
