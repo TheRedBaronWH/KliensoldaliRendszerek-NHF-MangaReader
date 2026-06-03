@@ -1,4 +1,4 @@
-import { isApiLogging, isTryWithOrgAsWell } from "../..";
+import { isApiLogging, isTryWithDev, isTryWithOrg } from "../..";
 import { CoverResponse, MangaResponse, MangaSearchResponse } from "../Model/Api/Manga";
 import { RawVolumesResponse, RawVolumesResponseToVolumesResponse, Volume} from "../Model/Api/Volume";
 import { MangaModel, SavedManga } from "../Model/Model";
@@ -22,7 +22,7 @@ export async function searchForMangasWithName(name: string): Promise<SavedManga[
         return manga;
     }
     else {
-        if (!isTryWithOrgAsWell()) {
+        if (!isTryWithOrg()) {
             return null;
         }
         console.log("[API] Trying with .org endpoint");
@@ -66,18 +66,21 @@ export async function loadManga(Id: string): Promise<MangaModel | null> {
     const url = "https://api.mangadex.dev/manga/";
     const orgUrl = "https://api.mangadex.org/manga/";
 
-    let manga = await fetchById(url, Id);
-    if (manga) {
-        return manga;
-    }
-    else {
-        if (!isTryWithOrgAsWell()) {
-            return null;
+    if (isTryWithDev()) {
+        let manga = await fetchById(url, Id);
+        if (manga) {
+            return manga;
         }
-        console.log("[API] Trying with .org endpoint");
-        let manga = await fetchById(orgUrl, Id);
-        return manga;
     }
+    
+    if (isTryWithOrg()) {
+        let manga = await fetchById(orgUrl, Id);
+        if (manga) {
+            return manga;
+        }
+    }
+
+    return null;
 }
 
 async function fetchById(url: string, Id: string): Promise<MangaModel | null> {
@@ -114,18 +117,21 @@ export async function loadMangaContent(Id: string): Promise<Volume[] | null> {
     const url = "https://api.mangadex.dev/manga/";
     const orgUrl = "https://api.mangadex.org/manga/";
 
-    let content = await fetchContent(url, Id);
-    if (content) {
-        return content;
-    }
-    else {
-        if (!isTryWithOrgAsWell()) {
-            return null;
+    if (isTryWithDev()) {
+        let content = await fetchContent(url, Id);
+        if (content) {
+            return content;
         }
-        console.log("[API] Trying with .org endpoint");
-        let content = await fetchContent(orgUrl, Id);
-        return content;
     }
+
+    if (isTryWithOrg()) {
+        let content = await fetchContent(orgUrl, Id);
+        if (content) {
+            return content;
+        }
+    }
+
+    return null;
 }
 
 async function fetchContent(url: string, Id: string): Promise<Volume[] | null> {
@@ -162,20 +168,24 @@ async function fetchContent(url: string, Id: string): Promise<Volume[] | null> {
  **/
 export async function loadMangaCover(mangaId: string, coverId: string): Promise<string | null> {
     const url = "https://api.mangadex.dev/cover/";
-    const orgUrl = "https://api.mangadex.org/cover/";
+    const orgUrl = isGoThroughProxy() ? "https://mangareader-proxy.theredbaron.workers.dev/cover/" : "https://api.mangadex.org/cover/";
 
-    let cover = await fetchCover(url, mangaId, coverId);
-    if (cover) {
-        return cover;
-    }
-    else {
-        if (!isTryWithOrgAsWell()) {
-            return null;
+
+    if(isTryWithDev()) {
+        let cover = await fetchCover(url, mangaId, coverId);
+        if (cover) {
+            return cover;
         }
-        console.log("[API] Trying with .org endpoint");
-        let cover = await fetchCover(orgUrl, mangaId, coverId);
-        return cover;
     }
+
+    if (isTryWithOrg()) {
+        let cover = await fetchCover(orgUrl, mangaId, coverId);
+        if (cover) {
+            return cover;
+        }
+    }
+
+    return null;
 }
 
 async function fetchCover(url: string, mangaId: string, coverId: string): Promise<string | null> {
